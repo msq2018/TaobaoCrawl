@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "68dab83839b35d1a8eca1f2c37adfc83",
+    "content-hash": "7f153bc2d3d2c2fcda184e8f9d07415f",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1615,6 +1615,37 @@
                 "uuid"
             ],
             "time": "2018-01-20T00:28:24+00:00"
+        },
+        {
+            "name": "shenjian/shenjian-sdk-php",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ShenJianShou/shenjian-sdk-php.git",
+                "reference": "daae2284481e00376e165ff41c3d7d6b17e5ebe0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/ShenJianShou/shenjian-sdk-php/daae2284481e00376e165ff41c3d7d6b17e5ebe0.zip",
+                "reference": "daae2284481e00376e165ff41c3d7d6b17e5ebe0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Shenjian\\": "src/Shenjian"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Shenjian SDK for PHP",
+            "homepage": "http://www.shenjian.io/",
+            "time": "2018-02-07T02:28:47+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
