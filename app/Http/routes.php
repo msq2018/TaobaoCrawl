@@ -13,5 +13,12 @@ Route::group([
     $router->get('/', 'HomeController@index');
 
     $router->get('example','ExampleController@index');
+    //shop config
+    $router->resource("shop_config","Shop\\ConfigController");
+
+    $router->get('example/start','ExampleController@start');
+
+    $router->get('example/stop','ExampleController@stop');
+
 
 });
