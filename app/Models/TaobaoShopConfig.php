@@ -2,9 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class TaobaoShopConfig extends Model
+
+class TaobaoShopConfig extends BaseModel
 {
-    //
+    
+    const PLATFORM_TAOBAO = "taobao";
+    
+    const PLATFORM_TMALL = "tmall";
+
+    const PLATFORM_1688 = "1688";
+    
 }

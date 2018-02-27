@@ -12,9 +12,19 @@ Route::group([
 
     $router->get('/', 'HomeController@index');
 
-    $router->get('example','ExampleController@index');
+
     //shop config
     $router->resource("shop_config","Shop\\ConfigController");
+
+    //crawler
+    $router->resource("crawler","Crawler\\ManageController");
+
+    $router->post("crawler/app_switch","Crawler\\ManageController@appSwitch")
+        ->name("crawler.app.switch");
+    $router->post("crawler/setUrl","Crawler\\ManageController@setScanUrl")
+        ->name("crawler.set_url");
+
+    $router->get('example','ExampleController@index');
 
     $router->get('example/start','ExampleController@start');
 

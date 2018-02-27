@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Shop;
 
+use App\Extensions\AddCrawlQueue;
 use App\Models\TaobaoShopConfig;
 
 use Encore\Admin\Form;
@@ -88,6 +89,12 @@ class ConfigController extends Controller
                 }
             });
             $grid->created_at("创建时间");
+            $grid->tools(function ($tools) {
+                $tools->batch(function ($batch) {
+                    $batch->add('添加到爬虫队列',new AddCrawlQueue());
+                });
+            });
+
         });
     }
 
