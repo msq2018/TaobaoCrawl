@@ -42,6 +42,9 @@ class Crawler extends BaseModel
         return parent::_construct();
     }
 
+    public function appSwitch($appId,$status){
+        
+    }
     /**
      * @author Ma ShaoQing <mashaoqing@jeulia.net>
      */
