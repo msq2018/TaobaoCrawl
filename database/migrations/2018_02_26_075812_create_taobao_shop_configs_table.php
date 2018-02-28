@@ -15,8 +15,8 @@ class CreateTaobaoShopConfigsTable extends Migration
     {
         Schema::create('taobao_shop_configs', function (Blueprint $table) {
             $table->increments('id');
-            $table->text("shop_name");
-            $table->text("shop_link");
+            $table->string("shop_name");
+            $table->string("shop_link");
             $table->tinyInteger("status")->default(1);
             $table->char("platform");
             $table->timestamps();

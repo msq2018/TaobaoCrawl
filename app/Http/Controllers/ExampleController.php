@@ -20,7 +20,9 @@ class ExampleController extends Controller
         $params['scanUrls'] = array("shop122157493.taobao.com");
         $time = time();
         $sign = md5($user_key.$time.$user_secret);
-        $url = "http://www.shenjianshou.cn/rest/crawler/config?user_key={$user_key}&timestamp={$time}&sign={$sign}&crawler_id={$app_id}";
+        //$url = "http://www.shenjianshou.cn/rest/crawler/config?user_key={$user_key}&timestamp={$time}&sign={$sign}&crawler_id={$app_id}";
+       // $url ="http://www.shenjianshou.cn/rest/crawler/start?user_key={$user_key}&timestamp={$time}&sign={$sign}&crawler_id={$app_id}";
+        $url = "http://www.shenjianshou.cn/rest/crawler/status?user_key={$user_key}&timestamp={$time}&sign={$sign}&crawler_id={$app_id}";
 
         var_dump($url);exit();
 

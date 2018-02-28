@@ -15,7 +15,6 @@ use Encore\Admin\Controllers\ModelForm;
 class ConfigController extends Controller
 {
     use ModelForm;
-
     /**
      * Index interface.
      *
@@ -72,21 +71,14 @@ class ConfigController extends Controller
     protected function grid()
     {
         return Admin::grid(TaobaoShopConfig::class, function (Grid $grid) {
-
             $grid->id('ID')->sortable();
             $grid->shop_name("店铺名称");
             $grid->shop_link("店铺连接");
             $grid->platform("平台")->display(function ($platform){
-                switch ($platform){
-                    case "taobao":
-                        return "淘宝";
-                    case "tmall":
-                        return "天猫";
-                    case "1688" :
-                        return "1688";
-                    default:
-                        return $platform;
-                }
+                return TaobaoShopConfig::getModel()->getPlatformLabel($platform);
+            });
+            $grid->status("status")->sortable()->display(function ($status){
+                return TaobaoShopConfig::getModel()->getStatusLabel($status);
             });
             $grid->created_at("创建时间");
             $grid->tools(function ($tools) {
@@ -94,7 +86,7 @@ class ConfigController extends Controller
                     $batch->add('添加到爬虫队列',new AddCrawlQueue());
                 });
             });
-
+            $this->disableRowSelectorScript();
         });
     }
 
@@ -114,5 +106,22 @@ class ConfigController extends Controller
                 "1688"=>"1688",
             ])->rules("required");
         });
+    }
+
+    private function disableRowSelectorScript()
+    {
+       $appendedItems =  TaobaoShopConfig::where("status",TaobaoShopConfig::APPENDED_STATUS)->get();
+        $disableIds =[];
+        foreach ($appendedItems as $item){
+            $disableIds[] = $item->id;
+        }
+        $disableIdsJson = json_encode($disableIds);
+        $script = <<<EOF
+        var disableIds = $disableIdsJson;
+        for(var i=0; i<disableIds.length;i++){
+           $('.grid-row-checkbox[data-id='+disableIds[i]+']').parent().html("<i class='fa fa-check-circle'></i>");
+        }
+EOF;
+        Admin::script($script);
     }
 }

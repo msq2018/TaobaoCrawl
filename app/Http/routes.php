@@ -16,13 +16,18 @@ Route::group([
     //shop config
     $router->resource("shop_config","Shop\\ConfigController");
 
-    //crawler
-    $router->resource("crawler","Crawler\\ManageController");
 
+    //crawler
+    $router->get("crawler","Crawler\\ManageController@index");
+
+    $router->get('crawler/get_status',"Crawler\\ManageController@getStatus")
+        ->name("crawler.get_status");
     $router->post("crawler/app_switch","Crawler\\ManageController@appSwitch")
         ->name("crawler.app.switch");
     $router->post("crawler/setUrl","Crawler\\ManageController@setScanUrl")
         ->name("crawler.set_url");
+    //crawler product
+    $router->resource("crawler_product","Crawler\\ProductController");
 
     $router->get('example','ExampleController@index');
 

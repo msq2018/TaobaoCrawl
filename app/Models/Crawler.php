@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Pagination\LengthAwarePaginator;
+use League\Flysystem\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Shenjian\ShenjianClient;
 use GuzzleHttp\Client as HttpClient;
@@ -43,19 +44,28 @@ class Crawler extends BaseModel
     }
 
     public function appSwitch($appId,$status){
-        
+        if (in_array($status,['start','resume','pause','stop'])){
+            $function = "{$status}Crawler";
+            if ($changedStatus=$this->client->$function($appId)){
+                $this->validateCrawlerStatus($appId,['stopped','running','paused']);
+                return true;
+            }
+        }
+        return false;
+    }
+    private function validateCrawlerStatus($appId,array $allowStatuses){
+        $status = $this->getCrawlerStatus($appId);
+        if (!in_array($status,$allowStatuses)){
+            sleep(2);
+            $this->validateCrawlerStatus($appId,$allowStatuses);
+        }
+        return $status;
     }
     /**
      * @author Ma ShaoQing <mashaoqing@jeulia.net>
      */
-    public function getAppStatus($appId){
-       $data = $this->getAppListData();
-        foreach ($data as $item){
-            if ($item['app_id'] == $appId){
-                return $item['status'];
-            }
-        }
-        return false;
+    public function getCrawlerStatus($appId){
+      return $this->client->getCrawlerStatus($appId);
     }
 
     public  function addScanUrlToCrawler($type,$link){
@@ -70,7 +80,7 @@ class Crawler extends BaseModel
             }
             array_push($cvalue,$link);
             $params['scanUrls'] = $cvalue;
-            if ($this->postCustomConfig($this->appIds[$type],$params) == 200){
+            if ($this->postCustomConfig($this->appIds[$type],$params) === 0){
                 return true;
             }
         }
@@ -79,14 +89,38 @@ class Crawler extends BaseModel
 
     public function postCustomConfig($appId,$params)
     {
+        sleep(1);
         $time = time();
         $sign = md5($this->userKey.$time.$this->userSecret);
         $url = "http://www.shenjianshou.cn/rest/crawler/config?user_key={$this->userKey}&timestamp={$time}&sign={$sign}&crawler_id={$appId}";
         $client = new HttpClient();
         $response  = $client->post($url,["form_params"=>$params]);
-        return $response->getStatusCode();
+        $result = json_decode($response->getBody(),true);
+        return $result['error_code'];
     }
 
+    public function getAppListData()
+    {
+        $appList = $this->client->getAppList();
+        $data = [];
+        foreach ($appList as $key=>$app){
+            if (in_array($app->getAppId(),$this->appIds)){
+                $data[$key]['app_id'] = $app->getAppId();
+                $data[$key]['info'] = $app->getInfo();
+                $data[$key]["name"] = $app->getName();
+                $data[$key]["status"] = $this->getCrawlerStatus($app->getAppId());
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * get source
+     * @author Ma ShaoQing <mashaoqing@jeulia.net>
+     */
+    public function getAllCrawlerDataSource(){
+        
+    }
 
     public function paginate()
     {
@@ -103,20 +137,5 @@ class Crawler extends BaseModel
     public static function with($relations)
     {
         return new static;
-    }
-
-    private function getAppListData()
-    {
-        $appList = $this->client->getAppList();
-        $data = [];
-        foreach ($appList as $key=>$app){
-            if (in_array($app->getAppId(),$this->appIds)){
-                $data[$key]['app_id'] = $app->getAppId();
-                $data[$key]['info'] = $app->getInfo();
-                $data[$key]["name"] = $app->getName();
-                $data[$key]["status"] = $app->getStatus();
-            }
-        }
-        return $data;
     }
 }

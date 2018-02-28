@@ -109,6 +109,10 @@ return [
         'filter_clear'       => '显示全部',
         'filter_placeholder' => '过滤',
     ],
+    "pausing" => "暂停中",
+    "paused"  => "已暂停",
+    "running" =>"运行中",
+    "stopping"=>"停止中",
     "stopped" => "已停止",
-    "starting" => "已启动",
+    "starting" => "启动中",
 ];

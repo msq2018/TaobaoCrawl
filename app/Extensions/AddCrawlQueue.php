@@ -22,7 +22,7 @@ class AddCrawlQueue extends BatchAction
 $('{$this->getElementClass()}').on('click', function() {
 var ids =  selectedRows(); 
     if (ids.length<1){
-        toastr.warning("请勾选需要添加的店铺");
+        toastr.warning("请勾选需要爬取的店铺");
         return  false;
     }
     $.ajax({
@@ -32,9 +32,9 @@ var ids =  selectedRows();
             _token:LA.token,
             ids: selectedRows(),
         },
-        success: function () {
+        success: function (response) {
             $.pjax.reload('#pjax-container');
-            toastr.success('操作成功');
+            toastr.success(response.message);
         }
     });
 });
