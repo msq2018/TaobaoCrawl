@@ -70,20 +70,34 @@ class ProductController extends Controller
         });
     }
 
-    public function acceptSourceData(){
+    public function acceptSourceData(Request $request){
         $user_secret = Crawler::getModel()->getUserSecret();
-        $sign2 = $_POST['sign2'];
-        $url = $_POST['url'];
-        $timestamp = $_POST['timestamp'];
+        $sign2 = $request->post('sign2');
+        $url = $request->post('url');
+        $timestamp = $request->post('timestamp');
+        $dataKey = $request->post("data_key");
         if (md5($url . $user_secret . $timestamp) === $sign2) {
-            $data = $_POST['data'];
-            // 处理数据
-            // 最后, 你需要输出"data_key"
-            echo $_POST['data_key'];
+            if (isset($_POST['data'])&& $data = $_POST['data']){
+                $data = json_decode($data,true);
+                $product =new Product();
+                $product->product_id = (int)$data['product_id'];
+                $product->name =  $data['name'];
+                $product->product_link =  $data['link'];
+                $product->origin_price = $data['origin_price'];
+                $product->gallery_images = serialize($data['gallery_images']);
+                $product->params = serialize($data['params']);
+                $product->attributes = serialize($data['attributes']);
+                $product->detail = htmlspecialchars($data['detail']);
+                $product->shop_id = $data['shop_id'];
+                $product->shop_name = $data['shop_name'];
+                $product->shop_link = $data['shop_link'];
+                $product->platform = "taobao";
+                $product->save();
+            }
         } else {
-            // 安全校验未通过拒绝响应
+           return response("validate error",403);
         }
-        return "success";
+        return response($dataKey);
     }
     /**
      * Make a grid builder.
