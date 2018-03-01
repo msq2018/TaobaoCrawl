@@ -71,12 +71,6 @@ class ProductController extends Controller
     }
 
     public function acceptSourceData(){
-        $encoding = $_SERVER['HTTP_CONTENT_ENCODING'];
-        if ($encoding == 'gzip') {//表示开启了gzip压缩
-            $body = gzdecode(file_get_contents('php://input'));//读取并解压数据
-            parse_str($body, $_POST);//将POST数据解析到全局变量$_POST中
-        }
-        file_put_contents("test.php",var_export($_POST,true),FILE_APPEND);
         $user_secret = Crawler::getModel()->getUserSecret();
         $sign2 = $_POST['sign2'];
         $url = $_POST['url'];
@@ -89,7 +83,7 @@ class ProductController extends Controller
         } else {
             // 安全校验未通过拒绝响应
         }
-
+        return "success";
     }
     /**
      * Make a grid builder.
