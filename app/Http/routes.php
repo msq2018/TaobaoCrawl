@@ -28,6 +28,7 @@ Route::group([
         ->name("crawler.set_url");
     //crawler product
     $router->resource("crawler_product","Crawler\\ProductController");
+    $router->get("crawler_getProduct","Crawler\\ProductController@getDataSource")               ->name("crawler.get_product");
 
     $router->get('example','ExampleController@index');
 

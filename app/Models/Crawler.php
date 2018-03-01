@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Pagination\LengthAwarePaginator;
-use League\Flysystem\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Shenjian\ShenjianClient;
 use GuzzleHttp\Client as HttpClient;
@@ -28,7 +27,7 @@ class Crawler extends BaseModel
      * @var array
      */
     protected $appIds = [
-        "taobao"=>916016
+        TaobaoShopConfig::PLATFORM_TAOBAO=>916016
     ];
 
     protected $client = null;
@@ -43,6 +42,9 @@ class Crawler extends BaseModel
         return parent::_construct();
     }
 
+    public function getUserSecret(){
+        return $this->userSecret;
+    }
     public function appSwitch($appId,$status){
         if (in_array($status,['start','resume','pause','stop'])){
             $function = "{$status}Crawler";
@@ -114,13 +116,6 @@ class Crawler extends BaseModel
         return $data;
     }
 
-    /**
-     * get source
-     * @author Ma ShaoQing <mashaoqing@jeulia.net>
-     */
-    public function getAllCrawlerDataSource(){
-        
-    }
 
     public function paginate()
     {
