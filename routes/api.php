@@ -17,5 +17,5 @@ use Illuminate\Http\Request;
     return $request->user();
 });*/
 
-Route::get('/accept_product',"Crawler\\ProductController@acceptSourceData")->name('crawler.accept_product');
+Route::POST('/accept_product',"Crawler\\ProductController@acceptSourceData")->name('crawler.accept_product');
 
