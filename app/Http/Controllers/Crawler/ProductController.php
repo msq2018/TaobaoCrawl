@@ -70,6 +70,7 @@ class ProductController extends Controller
         });
     }
 
+
     public function acceptSourceData(Request $request){
         $user_secret = Crawler::getModel()->getUserSecret();
         $sign2 = $request->post('sign2');
@@ -77,7 +78,8 @@ class ProductController extends Controller
         $timestamp = $request->post('timestamp');
         $dataKey = $request->post("data_key");
         if (md5($url . $user_secret . $timestamp) === $sign2) {
-            if (isset($_POST['data'])&& $data = $_POST['data']){
+            if ($data = $request->post('data',null)){
+                $data = iconv("GB2312","UTF8",$data);
                 $data = json_decode($data,true);
                 $product =new Product();
                 $product->product_id = (int)$data['product_id'];
