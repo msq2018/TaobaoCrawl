@@ -58,12 +58,20 @@ class ManageController extends Controller
 
     public function setScanUrl(Request $request){
         $shopIds = $request->post("ids");
+        $platforms = [];
         foreach ($shopIds as $id){
            $shop = TaobaoShopConfig::find($id);
             if (Crawler::getModel()->addScanUrlToCrawler($shop->platform,$shop->shop_link)){
+                $platforms[] = $shop->platform;
                 $shop->status = TaobaoShopConfig::APPENDED_STATUS;
                 $shop->save();
             }
+        }
+        $notRepeatPlatform = array_unique($platforms);
+        foreach ($notRepeatPlatform as $item){
+            if ($appId = Crawler::getModel()->getAppIdWithType($item)){
+                Crawler::getModel()->appRestart($appId);
+            };
         }
         return response()->json(["message"=>"shop append success"]);
     }

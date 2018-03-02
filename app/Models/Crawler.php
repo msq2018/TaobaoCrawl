@@ -45,6 +45,18 @@ class Crawler extends BaseModel
     public function getUserSecret(){
         return $this->userSecret;
     }
+
+    public function appRestart($appId){
+        $status = $this->getCrawlerStatus($appId);
+        if ($status == "stopped"){
+            $this->appSwitch($appId,"start");
+        }else{
+            $this->appSwitch($appId,"stop");
+            $this->appSwitch($appId,"start");
+        }
+        return;
+    }
+
     public function appSwitch($appId,$status){
         if (in_array($status,['start','resume','pause','stop'])){
             $function = "{$status}Crawler";
@@ -114,6 +126,13 @@ class Crawler extends BaseModel
             }
         }
         return $data;
+    }
+
+    public function getAppIdWithType($type){
+        if (isset($this->appIds[$type])){
+            return $this->appIds[$type];
+        }
+        return  false;
     }
 
 
