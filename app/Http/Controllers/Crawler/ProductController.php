@@ -30,8 +30,8 @@ class ProductController extends Controller
 
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('产品库');
+            $content->description('来自爬虫的产品数据');
 
             $content->body($this->grid());
         });
@@ -63,8 +63,8 @@ class ProductController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('产品库');
+            $content->description('来自爬虫的产品数据');
 
             $content->body($this->form());
         });
@@ -79,7 +79,7 @@ class ProductController extends Controller
         $dataKey = $request->post("data_key");
         if (md5($url . $user_secret . $timestamp) === $sign2) {
             if ($data = $request->post('data',null)){
-                $data = iconv("GB2312","UTF8",$data);
+                //$data = iconv("GB2312","UTF8",$data);
                 $data = json_decode($data,true);
                 $product =new Product();
                 $product->product_id = (int)$data['product_id'];
@@ -110,12 +110,27 @@ class ProductController extends Controller
     {
         return Admin::grid(Product::class, function (Grid $grid) {
             $grid->disableCreateButton();
-            $grid->id('ID')->sortable();
+            $grid->column('product_id',"产品Id")->sortable();
+            $grid->column("name","产品名称");
+            $grid->column("gallery_images","产品主图")->display(function ($galleryImages){
+                $images =  unserialize($galleryImages);
+                if (isset($images[0])){
+                    return "<img src='{$images[0]}' height='80'/>";
+                }
+                return "";
+            });
+            $grid->column("origin_price","原价");
+            $grid->column("shop_id","店铺ID");
+            $grid->column("shop_name","店铺名称");
+            $grid->column("product_link","产品连接")->display(function ($productLink){
+                return "<a href='{$productLink}' class='btn btn-success btn-sm'>查看产品</a>";
+            });
+            $grid->column("shop_link","店铺连接")->display(function ($shopLink){
+                return "<a href='{$shopLink}' class='btn btn-primary btn-sm'>查看店铺</a>";
+            });
             $grid->created_at();
-            $grid->updated_at();
             $grid->actions(function ($actions) {
                 $actions->disableDelete();
-                $actions->disableEdit();
             });
           /*  $grid->tools(function ($tools) {
                 $tools->append(new ImportDataSourceButton(TaobaoShopConfig::PLATFORM_TAOBAO));
