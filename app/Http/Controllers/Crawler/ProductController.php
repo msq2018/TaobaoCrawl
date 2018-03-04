@@ -81,7 +81,7 @@ class ProductController extends Controller
             //$data = iconv("GB2312","UTF8",$data);
             $data = json_decode($data,true);
             $product =new Product();
-            $product->product_id = (int)$data['product_id'];
+            $product->product_id = abs((int)$data['product_id']);
             $product->name =  $data['name'];
             $product->product_link =  $data['link'];
             $product->origin_price = $data['origin_price'];
@@ -109,6 +109,7 @@ class ProductController extends Controller
     {
         return Admin::grid(Product::class, function (Grid $grid) {
             $grid->disableCreateButton();
+            $grid->column("id","ID")->sortable();
             $grid->column('product_id',"产品Id")->sortable();
             $grid->column("name","产品名称");
             $grid->column("gallery_images","产品主图")->display(function ($galleryImages){
@@ -130,6 +131,7 @@ class ProductController extends Controller
             $grid->created_at();
             $grid->actions(function ($actions) {
                 $actions->disableDelete();
+                $actions->disableEdit();
             });
             /*  $grid->tools(function ($tools) {
                   $tools->append(new ImportDataSourceButton(TaobaoShopConfig::PLATFORM_TAOBAO));
