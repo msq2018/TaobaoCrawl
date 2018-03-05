@@ -18,4 +18,11 @@
  *
  */
 
+use Encore\Admin\Facades\Admin;
+use App\Extensions\Form\CKEditor;
+
 Encore\Admin\Form::forget(['map', 'editor']);
+
+Encore\Admin\Form::extend('editor', CKEditor::class);
+
+Admin::js('js/plugs/Sortable.min.js');

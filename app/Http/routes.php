@@ -27,8 +27,15 @@ Route::group([
     $router->post("crawler/setUrl","Crawler\\ManageController@setScanUrl")
         ->name("crawler.set_url");
     //crawler product
-    $router->resource("crawler_product","Crawler\\ProductController");
+    $router->get("crawler_product","Crawler\\ProductController@index");
     $router->get("crawler_getProduct","Crawler\\ProductController@getDataSource")               ->name("crawler.get_product");
+
+    //catalog
+    $router->resource("catalog/product","Catalog\\ProductController");
+    $router->get("catalog/product/{product}","Catalog\\ProductController@publishCrawlerProduct")
+        ->name("catalog.publish.product");
+
+
 
     $router->get('example','ExampleController@index');
 

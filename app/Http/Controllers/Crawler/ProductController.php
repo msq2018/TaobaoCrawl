@@ -54,22 +54,6 @@ class ProductController extends Controller
         });
     }
 
-    /**
-     * Create interface.
-     *
-     * @return Content
-     */
-    public function create()
-    {
-        return Admin::content(function (Content $content) {
-
-            $content->header('产品库');
-            $content->description('来自爬虫的产品数据');
-
-            $content->body($this->form());
-        });
-    }
-
 
     public function acceptSourceData(Request $request){
         $user_secret = Crawler::getModel()->getUserSecret();
@@ -113,9 +97,8 @@ class ProductController extends Controller
             $grid->column('product_id',"产品Id")->sortable();
             $grid->column("name","产品名称");
             $grid->column("gallery_images","产品主图")->display(function ($galleryImages){
-                $images =  unserialize($galleryImages);
-                if (isset($images[0])){
-                    return "<img src='{$images[0]}' height='80'/>";
+                if (isset($galleryImages[0])){
+                    return "<img src='{$galleryImages[0]}' height='80'/>";
                 }
                 return "";
             });
@@ -128,10 +111,12 @@ class ProductController extends Controller
             $grid->column("shop_link","店铺连接")->display(function ($shopLink){
                 return "<a href='{$shopLink}' class='btn btn-primary btn-sm'>查看店铺</a>";
             });
-            $grid->created_at();
+            $grid->created_at("创建时间");
             $grid->actions(function ($actions) {
                 $actions->disableDelete();
                 $actions->disableEdit();
+                $editProductUrl = route("catalog.publish.product",$actions->getKey());
+                $actions->append("<a href='{$editProductUrl}' class='btn btn-sm btn-warning'>编辑发布</a>");
             });
             /*  $grid->tools(function ($tools) {
                   $tools->append(new ImportDataSourceButton(TaobaoShopConfig::PLATFORM_TAOBAO));
@@ -148,7 +133,11 @@ class ProductController extends Controller
     {
         return Admin::form(Product::class, function (Form $form) {
 
-            $form->display('id', 'ID');
+            //$form->display('id', 'ID');
+            $form->text("name","产品名称");
+            $form->currency("origin_price","原价");
+            $form->multipleImage("gallery_images","产品图片")
+                ->removable();
 
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
