@@ -107,57 +107,7 @@
         @include('admin::form.help-block')
     </div>
 </div>
-<script type="application/javascript">
-    $(function () {
-        //title
-        var parentId = $('.option_box').length?$('.option_box').length:0,column = "params",rowId = 0;
-        $('#add-option').click(function (event) {
-            var newOptionHtml = template($("#new-option").html(),{
-                id : parentId,
-                column: column
-            });
-            $("#option-container").append(newOptionHtml);
-            parentId++;
-        })
-        $(document).on("click",".option_remove",function (event) {
-            $(this).parents(".option_box").remove();
-        })
-        //value
-        $(document).on("change",".option_input_type",function (event) {
-            if ($(".content-row").length != 0){
-                return false;
-            }
-            var type = $(this).val();
-            var typeHtml = $("#type-"+type).html();
-            var valueBox = $(this).parents(".option_box").find(".option-value-box");
-            var firstRow = template($("#type-"+type+"-row").html(),{
-                parentId : parentId,
-                rowId :rowId,
-                column : column,
-            });
-            typeHtml = template(typeHtml,{
-                firstRow: firstRow,
-            })
-            valueBox.html(typeHtml);
-        })
-        $(document).on("click",".option-value_remove_row,.option-value_add_row",function (event) {
-            if ($(this).attr("action") == 'remove'){
-                $(this).parents("tr").remove();
-            }else if($(this).attr("action") == 'add'){
-                var type = $(this).parents("table").data('type');
-                var rowHtml = $("#type-"+type+"-row").html();
-                rowHtml = template(rowHtml,{
-                    parentId : parentId,
-                    rowId :rowId,
-                    column : column,
-                })
-                $(this).parents("table").find('tbody').append(rowHtml);
-                rowId++;
-            }
 
-        })
-    })
-</script>
 <script type="text/html" id="new-option">
     <div class="panel panel-primary option_box" data-id="<%=id%>" >
             <div class="panel-body">
