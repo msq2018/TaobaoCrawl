@@ -20,9 +20,15 @@
 
 use Encore\Admin\Facades\Admin;
 use App\Extensions\Form\CKEditor;
+use App\Extensions\Form\Options;
 
 Encore\Admin\Form::forget(['map', 'editor']);
 
 Encore\Admin\Form::extend('editor', CKEditor::class);
+Encore\Admin\Form::extend("options",Options::class);
 
+
+Admin::css('css/styles.css');
+
+Admin::js('js/plugs/Sortable.min.js');
 Admin::js('js/plugs/Sortable.min.js');

@@ -11,6 +11,7 @@ use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 use App\Models\Crawler\Product as CrawlerProduct;
+use GuzzleHttp\Psr7\Request;
 
 class ProductController extends Controller
 {
@@ -63,6 +64,10 @@ class ProductController extends Controller
 
             $content->body($this->form());
         });
+    }
+
+    public function createFormCrawlerProduct(Request $request){
+        print_r($_POST);exit();
     }
 
     public function publishCrawlerProduct($id){
@@ -124,6 +129,7 @@ class ProductController extends Controller
     private function publishCrawlerProductForm()
     {
         return Admin::form(CrawlerProduct::class, function (Form $form) {
+            $form->setAction(route("create.product.form.crawler"));
             $form->tab('基础', function ($form) {
                 $form->multipleSelect("category_id","产品分类")->options([1 => 'foo', 2 => 'bar', 'val' => 'Option name']);
                 $form->text('name',"产品名称");
@@ -136,13 +142,13 @@ class ProductController extends Controller
                     'off' => ['value' => 0, 'text' => '关闭', 'color' => 'danger'],
                 ]);
             })->tab("属性",function ($form){
-
+                $form->options('params');
             })->tab('图片', function ($form) {
                     $form->multipleImage("gallery_images","产品图片")
                     ->removable();
             })->tab('描述', function ($form) {
                 $form->editor("short_description","短描述")->simple();
-                $form->editor("description","描述");
+                $form->editor("detail","描述");
 
             });
 

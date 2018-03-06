@@ -5,7 +5,7 @@ use Encore\Admin\Form\Field;
 
 class CKEditor extends Field{
 
-    protected $view = 'admin.ckeditor';
+    protected $view = 'admin.form.ckeditor';
 
     protected static $js = [
         '/vendor/ckeditor/ckeditor.js',

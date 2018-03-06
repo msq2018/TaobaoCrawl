@@ -15,10 +15,20 @@ class Product extends BaseModel
             $this->attributes['gallery_images'] = serialize($pictures);
         }
     }
+
     public function getGalleryImagesAttribute($pictures)
     {
         return unserialize($pictures);
     }
+
+    public function getParamsAttribute($params){
+        return unserialize($params);
+    }
+
+    public function getDetailAttribute($detail){
+        return htmlspecialchars_decode($detail);
+    }
+
 
 
 }
