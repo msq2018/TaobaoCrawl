@@ -31,7 +31,7 @@ class ProductController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('产品');
+            $content->header('header');
             $content->description('description');
 
             $content->body($this->grid());
@@ -117,19 +117,15 @@ class ProductController extends Controller
                 }
                 return "";
             });
-            $grid->column("sku","Sku");
-            $grid->column("qty","Qty");
             $grid->column("price","原价");
-
             $grid->column("special_price","促销价")->display(function ($specialPrice){
-                return $specialPrice?$specialPrice:"未设置";
+                
             });
             $grid->column("status","状态")->display(function ($status){
                 return $status?"开启":"关闭";
             });
 
             $grid->created_at("创建时间");
-            $grid->updated_at("更新时间");
         });
     }
 
