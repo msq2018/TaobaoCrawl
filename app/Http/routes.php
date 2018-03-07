@@ -33,10 +33,11 @@ Route::group([
 
     //catalog
     $router->resource("catalog/product","Catalog\\ProductController");
-    $router->get("catalog/product/{product}","Catalog\\ProductController@publishCrawlerProduct")
+
+    $router->match(['get','head'],"catalog/product/publish/{product}","Catalog\\ProductController@publishCrawlerProduct")
         ->name("catalog.publish.product");
 
-    $router->match(['put','patch'],"store_form_crawler","Catalog\\ProductController@storeFormCrawler")
+    $router->match(['put','patch'],"catalog/product/publish/{product}","Catalog\\ProductController@storeFormCrawler")
         ->name("store.product.form.crawler");
 
 

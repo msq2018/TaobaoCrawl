@@ -116,7 +116,7 @@ class ProductController extends Controller
                 $actions->disableDelete();
                 $actions->disableEdit();
                 $editProductUrl = route("catalog.publish.product",$actions->getKey());
-                $actions->append("<button onclick='window.location.href=\"{$editProductUrl}\"' class='btn btn-sm btn-warning'>编辑发布</button>");
+                $actions->append("<a href='{$editProductUrl}' class='btn btn-sm btn-warning'>编辑发布</a>");
             });
             /*  $grid->tools(function ($tools) {
                   $tools->append(new ImportDataSourceButton(TaobaoShopConfig::PLATFORM_TAOBAO));

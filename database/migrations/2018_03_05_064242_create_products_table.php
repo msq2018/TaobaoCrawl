@@ -15,17 +15,17 @@ class CreateProductsTable extends Migration
     {
         Schema::create('catalog_products', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer("category_id");
+            $table->string("category_id")->nullable();
             $table->string("name");
             $table->string("sku");
             $table->string("qty");
             $table->string("status");
             $table->decimal("price");
-            $table->decimal("special_price");
-            $table->text("images");
+            $table->decimal("special_price")->nullable();
+            $table->text("images")->nullable();
             $table->text("short_description");
-            $table->text("description");
-            $table->text("custom_options");
+            $table->text("description")->nullable();
+            $table->text("custom_options")->nullable();
             $table->timestamps();
         });
     }

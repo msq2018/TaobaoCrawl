@@ -21,6 +21,7 @@ class Options extends Field
 
     public function __construct($column, array $arguments)
     {
+
         parent::__construct($column, $arguments);
     }
 
@@ -34,6 +35,7 @@ class Options extends Field
     {
         return <<<EOT
         //title
+        template.config({sTag: '{#', eTag: '#}'});
         var parentId = $('.option_box').length?$('.option_box').length:0,column = "{$this->column}",rowId = 0;
         $('#add-option').click(function (event) {
             var newOptionHtml = template($("#new-option").html(),{
@@ -48,12 +50,12 @@ class Options extends Field
         })
         //value
         $(document).on("change",".option_input_type",function (event) {
-            if ($(".content-row").length != 0){
-                return false;
-            }
             var type = $(this).val();
             var typeHtml = $("#type-"+type).html();
             var valueBox = $(this).parents(".option_box").find(".option-value-box");
+            if (valueBox.find(".content-row").length != 0){
+                return false;
+            }
             var firstRow = template($("#type-"+type+"-row").html(),{
                 parentId : parentId,
                 rowId :rowId,
