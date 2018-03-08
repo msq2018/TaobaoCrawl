@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Crawler;
 
-use App\Extensions\ImportDataSourceButton;
 use App\Models\Crawler;
 use App\Models\Crawler\Product;
 
-use App\Models\TaobaoShopConfig;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
@@ -121,26 +119,6 @@ class ProductController extends Controller
             /*  $grid->tools(function ($tools) {
                   $tools->append(new ImportDataSourceButton(TaobaoShopConfig::PLATFORM_TAOBAO));
               });*/
-        });
-    }
-
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
-    protected function form()
-    {
-        return Admin::form(Product::class, function (Form $form) {
-
-            //$form->display('id', 'ID');
-            $form->text("name","产品名称");
-            $form->currency("origin_price","原价");
-            $form->multipleImage("gallery_images","产品图片")
-                ->removable();
-
-            $form->display('created_at', 'Created At');
-            $form->display('updated_at', 'Updated At');
         });
     }
 }

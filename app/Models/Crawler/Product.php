@@ -3,6 +3,8 @@
 namespace App\Models\Crawler;
 
 use App\Models\BaseModel;
+use Illuminate\Support\Facades\Schema;
+use League\Flysystem\Exception;
 
 class Product extends BaseModel
 {
@@ -21,6 +23,24 @@ class Product extends BaseModel
         return unserialize($pictures);
     }
 
+    public function setSpecificationsAttribute($specifications){
+        if (is_array($specifications)){
+            $this->attributes['specifications'] = serialize($specifications);
+        }
+    }
+
+    public function setParamsAttribute($params){
+        if (is_array($params)){
+            $this->attributes['params'] = serialize($params);
+        }
+    }
+
+    public function setDetailAttribute($detail){
+        if (!empty($detail)){
+            $this->attributes['detail'] = htmlspecialchars($detail);
+        }
+    }
+
     public function getParamsAttribute($params){
         return unserialize($params);
     }
@@ -28,6 +48,26 @@ class Product extends BaseModel
     public function getDetailAttribute($detail){
         return htmlspecialchars_decode($detail);
     }
+
+
+    public function saveResultFormGraphQL(array $data){
+        try{
+            $fields = Schema::getColumnListing($this->getTable());
+            if ($oldData = $this->where('product_id',$data['product_id'])->first()){
+                $data['id'] = $oldData->id;
+            }
+            foreach ($data as $key=>$value){
+                if (in_array($key,$fields)){
+                    $this->$key = $value;
+                }
+            }
+            return $this->save();
+        }catch (Exception $e){
+            report($e);
+        }
+    }
+
+
 
 
 

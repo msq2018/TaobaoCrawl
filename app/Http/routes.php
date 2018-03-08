@@ -26,10 +26,15 @@ Route::group([
         ->name("crawler.app.switch");
     $router->post("crawler/setUrl","Crawler\\ManageController@setScanUrl")
         ->name("crawler.set_url");
+    $router->post("get_crawler_result","Crawler\\ManageController@getCrawlerResult")
+        ->name("crawler.get_crawler_result");
+
     //crawler product
     $router->get("crawler_product","Crawler\\ProductController@index");
     $router->get("crawler_getProduct","Crawler\\ProductController@getDataSource")
         ->name("crawler.get_product");
+
+
 
     //catalog
     $router->resource("catalog/product","Catalog\\ProductController");

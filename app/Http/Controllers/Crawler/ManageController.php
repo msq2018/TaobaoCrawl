@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Crawler;
 
+use App\Extensions\CrawlerGraphQLButton;
 use App\Extensions\OperateCrawlerAppButton;
 use App\Models\Crawler;
 
@@ -76,6 +77,12 @@ class ManageController extends Controller
         return response()->json(["message"=>"shop append success"]);
     }
 
+    public function getCrawlerResult(Request $request){
+        $id = $request->post("id");
+        Crawler::getModel()->getGraphQLResult($id);
+        return ;
+    }
+
     /**
      * Make a grid builder.
      *
@@ -126,6 +133,7 @@ class ManageController extends Controller
                         "class"=> "btn-waring",
                     ]
                 ]));
+                $actions->append(new CrawlerGraphQLButton($actions->getKey()));
             });
 
         });
