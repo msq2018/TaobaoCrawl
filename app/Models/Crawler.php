@@ -159,24 +159,26 @@ class Crawler extends BaseModel
 
     public function getGraphQLResult($appId)
     {
+        
         $source = $this->client->getCrawlerSource($appId);
         $sourceId =  $source->getAppId();
         //http://graphql.shenjian.io/?user_key=用户key&timestamp=秒级时间戳&sign=签名&source_id=数据源ID&query=查询请求
-        $time = time();
-        $sign = md5($this->userKey.$time.$this->userSecret);
-
+    
         $cursor = 0;
         $has_next_page = false;
         $try = 0;
         do {
-            $query = urlencode("source(__id:{gt:{$cursor}},limit:20,sort:\"asc\")".
-                "{data{},page_info{end_cursor,has_next_page}}");
+            $time = time();
+            $sign = md5($this->userKey.$time.$this->userSecret);
+            
+            $query = urlencode("source(__id:{gt:$cursor},limit:20,sort:\"asc\"){data{},page_info{end_cursor,has_next_page}}");
             $url = "http://graphql.shenjian.io/?user_key={$this->userKey}&timestamp={$time}&sign={$sign}&source_id={$sourceId}&query={$query}";
             // 2. 发送请求并解析结果
             $client = new HttpClient();
             $response  = $client->get($url);
             $result = json_decode($response->getBody(), true);
             if ($result && $result['code'] == 0) {
+                file_put_contents("test.php", "{$cursor}\n",FILE_APPEND);
                 $try = 0;
                 $page_info = $result['result']['page_info'];
                 // 更新cursor, 下次从新的cursor开始查
@@ -191,7 +193,7 @@ class Crawler extends BaseModel
                 $try++;
                 // 重试3次还是失败, 退出前记录cursor, 以便下次继续
                 if ($try > 3) {
-                    Log::notice("crawler get result  try too many times, cursor: {$cursor}");
+                    Log::notice("crawler get result  try too many times, cursor: {$cursor} ,result:".$result['error_info']);
                     break;
                 }
             }
@@ -199,7 +201,7 @@ class Crawler extends BaseModel
                 Log::info("crawler get result no more data");
                 break;
             }
-            sleep(5);
+            sleep(6);
         } while(true);
         return true;
     }

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\Crawler;
 
 class getCrawlerProduct extends Command
 {
@@ -11,14 +12,15 @@ class getCrawlerProduct extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'crawler:product {appId : The crawler app id} ';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'get crawl results and save';
+
 
     /**
      * Create a new command instance.
@@ -37,6 +39,7 @@ class getCrawlerProduct extends Command
      */
     public function handle()
     {
-        //
+        $appId = $this->argument('appId');
+        Crawler::getModel()->getGraphQLResult($appId);
     }
 }

@@ -53,18 +53,17 @@ class Product extends BaseModel
     public function saveResultFormGraphQL(array $data){
         try{
             $fields = Schema::getColumnListing($this->getTable());
-            if ($oldData = $this->where('product_id',$data['product_id'])->first()){
-                $data['id'] = $oldData->id;
-            }
+            $model = $this->where('product_id',$data['product_id'])->first()?:$this;
             foreach ($data as $key=>$value){
                 if (in_array($key,$fields)){
-                    $this->$key = $value;
+                    $model->$key = $value;
                 }
             }
-            return $this->save();
+            return $model->save();
         }catch (Exception $e){
             report($e);
         }
+        return false;
     }
 
 

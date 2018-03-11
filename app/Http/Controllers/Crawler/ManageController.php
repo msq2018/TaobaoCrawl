@@ -14,6 +14,7 @@ use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class ManageController extends Controller
 {
@@ -79,8 +80,10 @@ class ManageController extends Controller
 
     public function getCrawlerResult(Request $request){
         $id = $request->post("id");
-        Crawler::getModel()->getGraphQLResult($id);
-        return ;
+        $exitCode = Artisan::call('crawler:product', [
+            'appId' => $id
+        ]);
+        return $exitCode;
     }
 
     /**
@@ -133,7 +136,7 @@ class ManageController extends Controller
                         "class"=> "btn-waring",
                     ]
                 ]));
-                $actions->append(new CrawlerGraphQLButton($actions->getKey()));
+                //$actions->append(new CrawlerGraphQLButton($actions->getKey()));
             });
 
         });
